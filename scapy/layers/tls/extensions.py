@@ -150,6 +150,26 @@ class ServerName(Packet):
     def guess_payload_class(self, p):
         return Padding
 
+class EncryptedServerName(Packet):
+    name = "Encrypted HostName"
+    fields_desc = [ShortEnumField("type", 0xffce, _tls_ext),
+                   ShortField("len", None),
+                   EnumField("cipher", None, _tls_cipher_suites),
+                   ShortEnumField("key_exchange_group", None, _tls_named_groups),
+                   FieldLenField("key_exchange_len", None,
+                               length_of="key_exchange",fmt="H"),
+                   XStrLenField("key_exchange", "",
+                               length_from=lambda pkt: pkt.key_exchange_len),
+                   FieldLenField("record_digest_len", None, length_of="record_digest"),
+                   XStrLenField("record_digest", "",
+                               length_from=lambda pkt: pkt.record_digest_len),
+                   FieldLenField("encrypted_sni_len", None,
+                               length_of="encrypted_sni",fmt="H"),
+                   XStrLenField("encrypted_sni", "",
+                               length_from=lambda pkt: pkt.encrypted_sni_len)]
+	
+    def guess_payload_class(self, p):
+        return Padding
 
 class EncryptedServerName(Packet):
     name = "Encrypted HostName"
