@@ -157,18 +157,19 @@ class EncryptedServerName(Packet):
                    ShortField("len", None),
                    EnumField("cipher", None, _tls_cipher_suites),
                    ShortEnumField("key_exchange_group", None,
-                                _tls_named_groups),
+                                  _tls_named_groups),
                    FieldLenField("key_exchange_len", None,
-                               length_of="key_exchange", fmt="H"), 
+                                 length_of="key_exchange", fmt="H"),
                    XStrLenField("key_exchange", "",
-                               length_from=lambda pkt: pkt.key_exchange_len),
-                   FieldLenField("record_digest_len", None, length_of="record_digest"),
+                                length_from=lambda pkt: pkt.key_exchange_len),
+                   FieldLenField("record_digest_len",
+                                 None, length_of="record_digest"),
                    XStrLenField("record_digest", "",
-                               length_from=lambda pkt: pkt.record_digest_len),
+                                length_from=lambda pkt: pkt.record_digest_len),
                    FieldLenField("encrypted_sni_len", None,
-                               length_of="encrypted_sni",fmt="H"),
+                                 length_of="encrypted_sni", fmt="H"),
                    XStrLenField("encrypted_sni", "",
-                               length_from=lambda pkt: pkt.encrypted_sni_len)]
+                                length_from=lambda pkt: pkt.encrypted_sni_len)]
 
     def guess_payload_class(self, p):
         return Padding
@@ -202,23 +203,26 @@ class TLS_Ext_ServerName(TLS_Ext_PrettyPacketList):                 # RFC 4366
                    ServerListField("servernames", [], ServerName,
                                    length_from=lambda pkt: pkt.servernameslen)]
 
+
 class TLS_Ext_EncryptedServerName(TLS_Ext_PrettyPacketList):
     name = "TLS Extension - Encrypted Server Name"
     fields_desc = [ShortEnumField("type", 0xffce, _tls_ext),
                    ShortField("len", None),
                    EnumField("cipher", None, _tls_cipher_suites),
-                   ShortEnumField("key_exchange_group", None, _tls_named_groups),
+                   ShortEnumField("key_exchange_group", None,
+                                  _tls_named_groups),
                    FieldLenField("key_exchange_len", None,
-                               length_of="key_exchange", fmt="H"),
+                                 length_of="key_exchange", fmt="H"),
                    XStrLenField("key_exchange", "",
-                               length_from=lambda pkt: pkt.key_exchange_len),
-                   FieldLenField("record_digest_len", None, length_of="record_digest"),
+                                length_from=lambda pkt: pkt.key_exchange_len),
+                   FieldLenField("record_digest_len",
+                                 None, length_of="record_digest"),
                    XStrLenField("record_digest", "",
-                               length_from=lambda pkt: pkt.record_digest_len),
+                                length_from=lambda pkt: pkt.record_digest_len),
                    FieldLenField("encrypted_sni_len", None,
-                               length_of="encrypted_sni", fmt="H"),
+                                 length_of="encrypted_sni", fmt="H"),
                    XStrLenField("encrypted_sni", "",
-                               length_from=lambda pkt: pkt.encrypted_sni_len)]
+                                length_from=lambda pkt: pkt.encrypted_sni_len)]
 
 
 class TLS_Ext_MaxFragLen(TLS_Ext_Unknown):                          # RFC 4366
